@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -349,11 +349,11 @@
         
         <div class="admin-content">
             <div class="task-form" id="taskForm">
-                <h2 id="formTitle">Crear Nuevo Producto</h2>
+                <h2 id="formTitle">Crear Nueva Tarea</h2>
                 <form onsubmit="saveTask(event)">
                     <div class="form-row">
                         <div class="form-group-admin">
-                            <label for="taskTitle">Título del Producto:</label>
+                            <label for="taskTitle">Título de la Tarea:</label>
                             <input type="text" id="taskTitle" name="taskTitle" required>
                         </div>
                         <div class="form-group-admin">
@@ -376,19 +376,19 @@
                     <div class="form-row full">
                         <div class="form-group-admin">
                             <label for="taskDescription">Descripción:</label>
-                            <textarea id="taskDescription" name="taskDescription" placeholder="Detalles del producto..." required></textarea>
+                            <textarea id="taskDescription" name="taskDescription" placeholder="Detalles de la tarea..." required></textarea>
                         </div>
                     </div>
 
                     <div class="form-buttons">
-                        <button type="submit" class="btn-save" id="submitBtn">Crear Producto</button>
+                        <button type="submit" class="btn-save" id="submitBtn">Crear Tarea</button>
                         <button type="button" class="btn-cancel" id="cancelBtn" onclick="cancelEdit()" style="display: none;">Cancelar</button>
                     </div>
                 </form>
             </div>
 
             <div class="tasks-list">
-                <h2>Lista de Productos</h2>
+                <h2>Lista de Tareas</h2>
                 <div id="tasksList"></div>
             </div>
         </div>
@@ -472,21 +472,21 @@
             try {
                 let res, data;
                 if (editingTaskId !== null) {
-                    res = await fetch(`/productos/${editingTaskId}`, {
+                    res = await fetch(`/tareas/${editingTaskId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ titulo, descripcion, asignadoA, fecha })
                     });
                     data = await res.json();
-                    if (!res.ok) throw new Error(data.error || 'Error al actualizar producto');
+                    if (!res.ok) throw new Error(data.error || 'Error al actualizar tarea');
                 } else {
-                    res = await fetch('/productos', {
+                    res = await fetch('/tareas', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ titulo, descripcion, asignadoA, fecha })
                     });
                     data = await res.json();
-                    if (!res.ok) throw new Error(data.error || 'Error al crear producto');
+                    if (!res.ok) throw new Error(data.error || 'Error al crear tarea');
                 }
 
                 clearForm();
@@ -504,29 +504,27 @@
             try {
                 if (!token) {
                     // Si no hay token, mostrar mensaje y no intentar API
-                    tasksList.innerHTML = '<div class="empty-message">Inicia sesión para gestionar productos.</div>';
+                    tasksList.innerHTML = '<div class="empty-message">Inicia sesión para gestionar tareas.</div>';
                     return;
                 }
 
-                const res = await fetch('/productos', { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch('/tareas', { headers: { 'Authorization': `Bearer ${token}` } });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Error al obtener productos');
+                if (!res.ok) throw new Error(data.error || 'Error al obtener tareas');
 
                 const tareas = data.tareas || [];
                 if (tareas.length === 0) {
-                    tasksList.innerHTML = '<div class="empty-message">No hay productos aún. Crea un nuevo producto.</div>';
+                    tasksList.innerHTML = '<div class="empty-message">No hay tareas aún. Crea una nueva tarea.</div>';
                     return;
                 }
 
-                tasksList.innerHTML = tareas.map(task => {
-                    const taskId = task._id || task.id;
-                    return `
+                tasksList.innerHTML = tareas.map(task => `
                     <div class="task-card">
                         <h3>${escapeHtml(task.titulo)}</h3>
                         <div class="task-description">${escapeHtml(task.descripcion)}</div>
                         <div class="task-info">
                             <div>
-                                <p><label>Creado Por:</label> ${escapeHtml(task.creadoPor || '')}</p>
+                                <p><label>Creado Por:</label> ${escapeHtml(task.creadoPor || task.creadoPor || '')}</p>
                                 <p><label>Asignado a:</label> ${escapeHtml(task.asignadoA)}</p>
                             </div>
                             <div>
@@ -535,12 +533,11 @@
                             </div>
                         </div>
                         <div class="task-actions">
-                            <button class="btn-edit" onclick="editTask('${taskId}')">Editar</button>
-                            <button class="btn-delete" onclick="deleteTask('${taskId}')">Eliminar</button>
+                            <button class="btn-edit" onclick="editTask(${task.id})">Editar</button>
+                            <button class="btn-delete" onclick="deleteTask(${task.id})">Eliminar</button>
                         </div>
                     </div>
-                `;
-                }).join('');
+                `).join('');
             } catch (err) {
                 tasksList.innerHTML = `<div class="empty-message">Error: ${escapeHtml(err.message)}</div>`;
             }
@@ -551,14 +548,14 @@
             if (!token) return alert('Debes iniciar sesión');
 
             try {
-                const res = await fetch('/productos', { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch('/tareas', { headers: { 'Authorization': `Bearer ${token}` } });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Error al obtener productos');
+                if (!res.ok) throw new Error(data.error || 'Error al obtener tareas');
 
-                const tarea = data.tareas.find(t => String(t._id || t.id) === String(id));
-                if (!tarea) return alert('Producto no encontrado');
+                const tarea = data.tareas.find(t => t.id == id);
+                if (!tarea) return alert('Tarea no encontrada');
 
-                document.getElementById('formTitle').textContent = 'Editar Producto';
+                document.getElementById('formTitle').textContent = 'Editar Tarea';
                 document.getElementById('taskTitle').value = tarea.titulo;
                 document.getElementById('taskCreatedBy').value = tarea.creadoPor || localStorage.getItem('username');
                 document.getElementById('taskAssignedTo').value = tarea.asignadoA;
@@ -569,22 +566,22 @@
                 editingTaskId = id;
                 document.getElementById('taskForm').scrollIntoView({ behavior: 'smooth' });
             } catch (err) {
-                alert(err.message || 'Error al cargar el producto');
+                alert(err.message || 'Error al cargar la tarea');
             }
         }
 
         async function deleteTask(id) {
-            if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+            if (!confirm('¿Estás seguro de que deseas eliminar esta tarea?')) return;
             const token = localStorage.getItem('token');
             if (!token) return alert('Debes iniciar sesión');
 
             try {
-                const res = await fetch(`/productos/${id}`, {
+                const res = await fetch(`/tareas/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Error al eliminar producto');
+                if (!res.ok) throw new Error(data.error || 'Error al eliminar tarea');
                 loadTasks();
             } catch (err) {
                 alert(err.message || 'Error al eliminar');
@@ -600,8 +597,8 @@
 
         function cancelEdit() {
             editingTaskId = null;
-            document.getElementById('formTitle').textContent = 'Crear Nuevo Producto';
-            document.getElementById('submitBtn').textContent = 'Crear Producto';
+            document.getElementById('formTitle').textContent = 'Crear Nueva Tarea';
+            document.getElementById('submitBtn').textContent = 'Crear Tarea';
             document.getElementById('cancelBtn').style.display = 'none';
             clearForm();
         }
@@ -624,4 +621,3 @@
     </script>
 </body>
 </html>
-
