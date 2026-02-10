@@ -1,0 +1,627 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - IBM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #764ba2;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .admin-panel {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .admin-panel h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .logout-btn {
+            background-color: #d32f2f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            float: right;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #b71c1c;
+        }
+
+        .admin-content {
+            clear: both;
+            margin-top: 20px;
+        }
+
+        .task-form {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .task-form h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group-admin {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group-admin label {
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group-admin input,
+        .form-group-admin textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group-admin textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-save:hover {
+            background-color: #45a049;
+        }
+
+        .btn-cancel {
+            background-color: #999;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #777;
+        }
+
+        .tasks-list {
+            margin-top: 20px;
+        }
+
+        .tasks-list h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .task-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .task-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .task-info p {
+            margin: 5px 0;
+        }
+
+        .task-info label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .task-description {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+            border-left: 4px solid #667eea;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background-color: #2196F3;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-edit:hover {
+            background-color: #0b7dda;
+        }
+
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-delete:hover {
+            background-color: #da190b;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN FORM -->
+    <div id="loginForm" class="login-container">
+        <h1>Admin Login</h1>
+        <div class="error-message" id="errorMessage"></div>
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Iniciar sesión</button>
+        </form>
+        <div class="back-link">
+            <a href="index.html">← Volver a la página principal</a>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" class="admin-panel">
+        <h1>Panel de Administración</h1>
+        <button class="logout-btn" onclick="handleLogout()">Cerrar sesión</button>
+        
+        <div class="admin-content">
+            <div class="task-form" id="taskForm">
+                <h2 id="formTitle">Crear Nuevo Producto</h2>
+                <form onsubmit="saveTask(event)">
+                    <div class="form-row">
+                        <div class="form-group-admin">
+                            <label for="taskTitle">Título del Producto:</label>
+                            <input type="text" id="taskTitle" name="taskTitle" required>
+                        </div>
+                        <div class="form-group-admin">
+                            <label for="taskCreatedBy">Creado Por:</label>
+                            <input type="text" id="taskCreatedBy" name="taskCreatedBy" value="admin" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group-admin">
+                            <label for="taskAssignedTo">Asignado a:</label>
+                            <input type="text" id="taskAssignedTo" name="taskAssignedTo" placeholder="Nombre de quien se asigna" required>
+                        </div>
+                        <div class="form-group-admin">
+                            <label for="taskDate">Fecha de Asignación:</label>
+                            <input type="date" id="taskDate" name="taskDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group-admin">
+                            <label for="taskDescription">Descripción:</label>
+                            <textarea id="taskDescription" name="taskDescription" placeholder="Detalles del producto..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn-save" id="submitBtn">Crear Producto</button>
+                        <button type="button" class="btn-cancel" id="cancelBtn" onclick="cancelEdit()" style="display: none;">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tasks-list">
+                <h2>Lista de Productos</h2>
+                <div id="tasksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables de estado
+        let editingTaskId = null;
+
+        // Inicializar
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                showAdminPanel();
+            }
+            setTodayDate();
+            loadTasks();
+        });
+
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDate').value = today;
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            try {
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username', data.usuario.username);
+                errorMessage.style.display = 'none';
+                showAdminPanel();
+            } catch (err) {
+                errorMessage.textContent = 'Usuario o contraseña incorrectos';
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        function showAdminPanel() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            const username = localStorage.getItem('username') || 'admin';
+            document.getElementById('taskCreatedBy').value = username;
+            loadTasks();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // FUNCIONES DEL GESTOR DE TAREAS (con API)
+        async function saveTask(event) {
+            event.preventDefault();
+            const token = localStorage.getItem('token');
+            if (!token) return alert('Debes iniciar sesión como admin');
+
+            const titulo = document.getElementById('taskTitle').value;
+            const creadoPor = document.getElementById('taskCreatedBy').value;
+            const asignadoA = document.getElementById('taskAssignedTo').value;
+            const fecha = document.getElementById('taskDate').value;
+            const descripcion = document.getElementById('taskDescription').value;
+
+            try {
+                let res, data;
+                if (editingTaskId !== null) {
+                    res = await fetch(`/productos/${editingTaskId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ titulo, descripcion, asignadoA, fecha })
+                    });
+                    data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Error al actualizar producto');
+                } else {
+                    res = await fetch('/productos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ titulo, descripcion, asignadoA, fecha })
+                    });
+                    data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Error al crear producto');
+                }
+
+                clearForm();
+                cancelEdit();
+                loadTasks();
+            } catch (err) {
+                alert(err.message || 'Error en la operación');
+            }
+        }
+
+        async function loadTasks() {
+            const tasksList = document.getElementById('tasksList');
+            const token = localStorage.getItem('token');
+
+            try {
+                if (!token) {
+                    // Si no hay token, mostrar mensaje y no intentar API
+                    tasksList.innerHTML = '<div class="empty-message">Inicia sesión para gestionar productos.</div>';
+                    return;
+                }
+
+                const res = await fetch('/productos', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al obtener productos');
+
+                const tareas = data.tareas || [];
+                if (tareas.length === 0) {
+                    tasksList.innerHTML = '<div class="empty-message">No hay productos aún. Crea un nuevo producto.</div>';
+                    return;
+                }
+
+                tasksList.innerHTML = tareas.map(task => {
+                    const taskId = task._id || task.id;
+                    return `
+                    <div class="task-card">
+                        <h3>${escapeHtml(task.titulo)}</h3>
+                        <div class="task-description">${escapeHtml(task.descripcion)}</div>
+                        <div class="task-info">
+                            <div>
+                                <p><label>Creado Por:</label> ${escapeHtml(task.creadoPor || '')}</p>
+                                <p><label>Asignado a:</label> ${escapeHtml(task.asignadoA)}</p>
+                            </div>
+                            <div>
+                                <p><label>Fecha de Asignación:</label> ${formatDate(task.fecha)}</p>
+                                <p><label>Creada:</label> ${new Date(task.creadaEn).toLocaleString('es-ES')}</p>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-edit" onclick="editTask('${taskId}')">Editar</button>
+                            <button class="btn-delete" onclick="deleteTask('${taskId}')">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+                }).join('');
+            } catch (err) {
+                tasksList.innerHTML = `<div class="empty-message">Error: ${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        async function editTask(id) {
+            const token = localStorage.getItem('token');
+            if (!token) return alert('Debes iniciar sesión');
+
+            try {
+                const res = await fetch('/productos', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al obtener productos');
+
+                const tarea = data.tareas.find(t => String(t._id || t.id) === String(id));
+                if (!tarea) return alert('Producto no encontrado');
+
+                document.getElementById('formTitle').textContent = 'Editar Producto';
+                document.getElementById('taskTitle').value = tarea.titulo;
+                document.getElementById('taskCreatedBy').value = tarea.creadoPor || localStorage.getItem('username');
+                document.getElementById('taskAssignedTo').value = tarea.asignadoA;
+                document.getElementById('taskDate').value = tarea.fecha;
+                document.getElementById('taskDescription').value = tarea.descripcion;
+                document.getElementById('submitBtn').textContent = 'Guardar Cambios';
+                document.getElementById('cancelBtn').style.display = 'inline-block';
+                editingTaskId = id;
+                document.getElementById('taskForm').scrollIntoView({ behavior: 'smooth' });
+            } catch (err) {
+                alert(err.message || 'Error al cargar el producto');
+            }
+        }
+
+        async function deleteTask(id) {
+            if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+            const token = localStorage.getItem('token');
+            if (!token) return alert('Debes iniciar sesión');
+
+            try {
+                const res = await fetch(`/productos/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al eliminar producto');
+                loadTasks();
+            } catch (err) {
+                alert(err.message || 'Error al eliminar');
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskAssignedTo').value = '';
+            document.getElementById('taskDescription').value = '';
+            setTodayDate();
+        }
+
+        function cancelEdit() {
+            editingTaskId = null;
+            document.getElementById('formTitle').textContent = 'Crear Nuevo Producto';
+            document.getElementById('submitBtn').textContent = 'Crear Producto';
+            document.getElementById('cancelBtn').style.display = 'none';
+            clearForm();
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString + 'T00:00:00').toLocaleDateString('es-ES', options);
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe && unsafe !== 0) return '';
+            return String(unsafe)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+</body>
+</html>
+

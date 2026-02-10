@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1770246322438,
+    "titulo": "Tarea de prueba",
+    "descripcion": "Probar API",
+    "asignadoA": "Equipo",
+    "fecha": "2026-02-04",
+    "creadoPor": "admin",
+    "creadaEn": "2026-02-04T23:05:22.438Z",
+    "completada": false
+  },
+  {
+    "id": 1770246682414,
+    "titulo": "Tarea desde admin.html",
+    "descripcion": "Creada tras integrar API",
+    "asignadoA": "Equipo A",
+    "fecha": "2026-02-04",
+    "creadoPor": "admin",
+    "creadaEn": "2026-02-04T23:11:22.414Z",
+    "completada": false
+  }
+]

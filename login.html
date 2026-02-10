@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .card {
+        background: #fff;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        width: 320px;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0 0 16px;
+      }
+      label {
+        display: block;
+        margin: 12px 0 6px;
+        font-size: 14px;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+      }
+      button {
+        margin-top: 16px;
+        width: 100%;
+        padding: 10px;
+        background: #0b5cab;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .msg {
+        margin-top: 12px;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Iniciar sesión</h1>
+      <form id="loginForm">
+        <label for="username">Usuario</label>
+        <input id="username" name="username" type="text" required />
+
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" required />
+
+        <button type="submit">Entrar</button>
+      </form>
+      <div class="msg" id="msg"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById('loginForm');
+      const msg = document.getElementById('msg');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        msg.textContent = '';
+
+        const payload = {
+          username: form.username.value,
+          password: form.password.value,
+        };
+
+        try {
+          const res = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await res.json();
+          if (!res.ok) {
+            msg.textContent = data.error || 'Error al iniciar sesión';
+            return;
+          }
+
+          msg.textContent = 'Login correcto. Token generado.';
+          localStorage.setItem('token', data.token);
+        } catch (err) {
+          msg.textContent = 'Error de conexión';
+        }
+      });
+    </script>
+  </body>
+</html>

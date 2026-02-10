@@ -1,0 +1,99 @@
+/* ESTILOS GENERALES */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #222;
+}
+
+/* ENCABEZADO */
+#encabezado {
+    background-color: #0f62fe;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* SECCIÓN PROYECTOS */
+#proyectos {
+    padding: 20px;
+    background-color: white;
+}
+
+.proyecto {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.proyecto img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.proyecto a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0f62fe;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* SECCIÓN CONTACTO */
+#contacto {
+    padding: 20px;
+    background-color: #e8e8e8;
+}
+
+form {
+    max-width: 500px;
+    margin: auto;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #0f62fe;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* PIE DE PÁGINA */
+#pie {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+#pie a {
+    color: #0f62fe;
+    text-decoration: none;
+}
+
+/* DISEÑO RESPONSIVO */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    #encabezado h1 {
+        font-size: 22px;
+    }
+}
