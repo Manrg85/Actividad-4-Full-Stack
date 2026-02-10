@@ -11,16 +11,17 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Archivos estÃ¡ticos
-app.use(express.static(__dirname));
+// Archivos estáticos
+const publicPath = path.join(__dirname, '..', 'public');
+app.use(express.static(publicPath));
 
 // Rutas
 app.use(authRoutes);
 app.use(tareaRoutes);
 
-// Ruta raÃ­z
+// Ruta raíz
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 // Rutas no encontradas
