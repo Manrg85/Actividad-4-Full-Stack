@@ -15,6 +15,4 @@ jobs:
         with:
           node-version: "20"
       - run: npm ci
-        working-directory: "ACTIVIDAD 3/api-tareas"
       - run: npm test
-        working-directory: "ACTIVIDAD 3/api-tareas"
