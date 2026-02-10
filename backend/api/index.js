@@ -1,8 +1,7 @@
-const app = require('../app');
-const { connectDB } = require('../config/db');
+﻿const app = require('../app');
+const { iniciarDB } = require('../init');
 
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/api_tareas';
-connectDB(mongoUri).catch((error) => {
+iniciarDB().catch((error) => {
   console.error('Error al conectar a MongoDB en Vercel:', error);
 });
 
