@@ -1,7 +1,7 @@
 # Actividad-4-Full-Stack
 
 ## Requisitos
-1. Node.js 18+.
+1. Node.js.
 2. MongoDB local o MongoDB Atlas.
 
 ## Variables de entorno
